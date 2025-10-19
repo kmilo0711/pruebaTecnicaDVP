@@ -36,7 +36,6 @@ public class HttpAuditoriaClient
         }
         catch (Exception ex)
         {
-            // Log the error but don't fail the main operation
             Console.WriteLine($"Error registrando evento de auditoría: {ex.Message}");
         }
     }

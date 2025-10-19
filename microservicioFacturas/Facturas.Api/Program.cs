@@ -3,12 +3,10 @@ using Facturas.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configuration
 var connectionString = builder.Configuration.GetConnectionString("OracleDb") 
     ?? throw new InvalidOperationException("Connection string 'OracleDb' not found.");
 var clientesServiceUrl = builder.Configuration["ClientesServiceUrl"] 
@@ -16,12 +14,10 @@ var clientesServiceUrl = builder.Configuration["ClientesServiceUrl"]
 var auditoriaServiceUrl = builder.Configuration["AuditoriaServiceUrl"] 
     ?? throw new InvalidOperationException("AuditoriaServiceUrl not found in configuration.");
 
-// Register dependencies
 builder.Services.AddScoped<IFacturaRepository>(provider => 
     new OracleFacturaRepository(connectionString));
 builder.Services.AddScoped<FacturaService>();
 
-// Register HttpClients
 builder.Services.AddHttpClient<HttpClienteGateway>();
 builder.Services.AddScoped<IClienteGateway>(provider =>
 {
@@ -40,7 +36,6 @@ builder.Services.AddScoped<HttpAuditoriaClient>(provider =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

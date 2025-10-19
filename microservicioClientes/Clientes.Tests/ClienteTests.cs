@@ -7,7 +7,6 @@ public class ClienteTests
     [Fact]
     public void Validar_ClienteValido_NoLanzaExcepcion()
     {
-        // Arrange
         var cliente = new Cliente
         {
             Nombre = "Juan Pérez",
@@ -16,7 +15,6 @@ public class ClienteTests
             Direccion = "Calle 123 #45-67"
         };
 
-        // Act & Assert
         var exception = Record.Exception(() => cliente.Validar());
         Assert.Null(exception);
     }
@@ -24,7 +22,6 @@ public class ClienteTests
     [Fact]
     public void Validar_NombreVacio_LanzaExcepcion()
     {
-        // Arrange
         var cliente = new Cliente
         {
             Nombre = "",
@@ -33,7 +30,6 @@ public class ClienteTests
             Direccion = "Calle 123 #45-67"
         };
 
-        // Act & Assert
         var exception = Assert.Throws<ArgumentException>(() => cliente.Validar());
         Assert.Equal("El nombre es requerido", exception.Message);
     }
@@ -41,7 +37,6 @@ public class ClienteTests
     [Fact]
     public void Validar_IdentificacionVacia_LanzaExcepcion()
     {
-        // Arrange
         var cliente = new Cliente
         {
             Nombre = "Juan Pérez",
@@ -50,7 +45,6 @@ public class ClienteTests
             Direccion = "Calle 123 #45-67"
         };
 
-        // Act & Assert
         var exception = Assert.Throws<ArgumentException>(() => cliente.Validar());
         Assert.Equal("La identificación es requerida", exception.Message);
     }
@@ -58,7 +52,6 @@ public class ClienteTests
     [Fact]
     public void Validar_CorreoVacio_LanzaExcepcion()
     {
-        // Arrange
         var cliente = new Cliente
         {
             Nombre = "Juan Pérez",
@@ -67,7 +60,6 @@ public class ClienteTests
             Direccion = "Calle 123 #45-67"
         };
 
-        // Act & Assert
         var exception = Assert.Throws<ArgumentException>(() => cliente.Validar());
         Assert.Equal("El correo es requerido", exception.Message);
     }
@@ -75,7 +67,6 @@ public class ClienteTests
     [Fact]
     public void Validar_DireccionVacia_LanzaExcepcion()
     {
-        // Arrange
         var cliente = new Cliente
         {
             Nombre = "Juan Pérez",
@@ -84,7 +75,6 @@ public class ClienteTests
             Direccion = ""
         };
 
-        // Act & Assert
         var exception = Assert.Throws<ArgumentException>(() => cliente.Validar());
         Assert.Equal("La dirección es requerida", exception.Message);
     }

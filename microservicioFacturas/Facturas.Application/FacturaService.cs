@@ -25,7 +25,6 @@ public class FacturaService
 
         factura.Validar();
 
-        // Validar que el cliente existe
         var clienteExiste = await _clienteGateway.ExisteClienteAsync(request.ClienteId);
         if (!clienteExiste)
             throw new ArgumentException($"El cliente con ID {request.ClienteId} no existe");

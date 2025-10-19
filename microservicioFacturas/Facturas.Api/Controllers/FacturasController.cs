@@ -5,9 +5,6 @@ using Facturas.Infrastructure;
 
 namespace Facturas.Api.Controllers;
 
-/// <summary>
-/// Controlador para la gestión de facturas
-/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class FacturasController : ControllerBase
@@ -21,19 +18,12 @@ public class FacturasController : ControllerBase
         _auditoriaClient = auditoriaClient;
     }
 
-    /// <summary>
-    /// Crear una nueva factura
-    /// </summary>
-    /// <param name="request">Datos de la factura a crear</param>
-    /// <returns>Factura creada</returns>
     [HttpPost]
     public async Task<ActionResult<FacturaResponse>> CrearFactura([FromBody] CreateFacturaRequest request)
     {
         try
         {
             var factura = await _facturaService.CrearAsync(request);
-            
-            // Registrar evento de auditoría
             await _auditoriaClient.RegistrarEventoAsync(
                 "Facturas", 
                 "Factura", 
@@ -54,11 +44,6 @@ public class FacturasController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Obtener una factura por su ID
-    /// </summary>
-    /// <param name="id">ID de la factura</param>
-    /// <returns>Factura encontrada</returns>
     [HttpGet("{id}")]
     public async Task<ActionResult<FacturaResponse>> ObtenerFacturaPorId(int id)
     {
@@ -77,12 +62,6 @@ public class FacturasController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Obtener facturas por rango de fechas
-    /// </summary>
-    /// <param name="fechaInicio">Fecha de inicio del rango</param>
-    /// <param name="fechaFin">Fecha de fin del rango</param>
-    /// <returns>Lista de facturas en el rango</returns>
     [HttpGet]
     public async Task<ActionResult<List<FacturaResponse>>> ObtenerFacturasPorRango(
         [FromQuery] DateTime fechaInicio, 

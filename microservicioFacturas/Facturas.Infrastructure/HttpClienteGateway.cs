@@ -22,7 +22,6 @@ public class HttpClienteGateway : IClienteGateway
         }
         catch (Exception)
         {
-            // En caso de error de comunicación, asumimos que el cliente no existe
             return false;
         }
     }

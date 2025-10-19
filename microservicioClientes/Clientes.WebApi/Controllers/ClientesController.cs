@@ -2,12 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Clientes.Application;
 using Clientes.Application.DTOs;
 using Clientes.Infrastructure;
+using Oracle.ManagedDataAccess.Client;
 
 namespace Clientes.WebApi.Controllers;
 
-/// <summary>
-/// Controlador para la gestión de clientes
-/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class ClientesController : ControllerBase
@@ -21,19 +19,12 @@ public class ClientesController : ControllerBase
         _auditoriaClient = auditoriaClient;
     }
 
-    /// <summary>
-    /// Crear un nuevo cliente
-    /// </summary>
-    /// <param name="request">Datos del cliente a crear</param>
-    /// <returns>Cliente creado</returns>
     [HttpPost]
     public async Task<ActionResult<ClienteResponse>> CrearCliente([FromBody] CreateClienteRequest request)
     {
         try
         {
             var cliente = await _clienteService.CrearAsync(request);
-            
-            // Registrar evento de auditoría
             await _auditoriaClient.RegistrarEventoAsync(
                 "Clientes", 
                 "Cliente", 
@@ -48,17 +39,20 @@ public class ClientesController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
+        catch (OracleException ex) when (ex.Number == 1)
+        {
+            return Conflict(new { message = "Ya existe un cliente con la identificación proporcionada." });
+        }
+        catch (OracleException ex)
+        {
+            return StatusCode(500, new { message = "Error al acceder a la base de datos", details = ex.Message });
+        }
         catch (Exception ex)
         {
             return StatusCode(500, new { message = "Error interno del servidor", details = ex.Message });
         }
     }
 
-    /// <summary>
-    /// Obtener un cliente por su ID
-    /// </summary>
-    /// <param name="id">ID del cliente</param>
-    /// <returns>Cliente encontrado</returns>
     [HttpGet("{id}")]
     public async Task<ActionResult<ClienteResponse>> ObtenerClientePorId(int id)
     {
@@ -77,10 +71,6 @@ public class ClientesController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Obtener todos los clientes
-    /// </summary>
-    /// <returns>Lista de clientes</returns>
     [HttpGet]
     public async Task<ActionResult<List<ClienteResponse>>> ObtenerTodosLosClientes()
     {
