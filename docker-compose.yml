@@ -1,0 +1,49 @@
+services:
+  oracle:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    container_name: oracle
+    environment:
+      - ORACLE_PWD=oracle123
+      - ORACLE_CHARACTERSET=AL32UTF8
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./scripts/oracle:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "sqlplus", "-L", "system/oracle123@//localhost:1521/XE", "@/dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin123
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./scripts/mongo:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+
+volumes:
+  oracle-data:
+    driver: local
+  mongo-data:
+    driver: local
+
+networks:
+  default:
+    name: prueba-tecnica-network
