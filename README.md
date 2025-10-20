@@ -757,15 +757,6 @@ bundle install --path vendor/bundle
 bundle exec ruby app.rb
 ```
 
-#### Error de conexión MongoDB
-```bash
-# Verificar configuración en config/database.rb
-# Por defecto: mongodb://localhost:27017/auditoria_db
-
-# Si MongoDB tiene autenticación:
-# mongodb://admin:admin123@localhost:27017/auditoria_db?authSource=admin
-```
-
 #### Puerto 5003 ocupado
 ```bash
 # Cambiar puerto en app.rb
